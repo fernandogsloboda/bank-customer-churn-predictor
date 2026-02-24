@@ -1,6 +1,6 @@
 # 🏛️ Alpha Bank | Customer Churn Intelligence
 
-### 🔴 **Live Application:** [[LINK_DO_APP](https://bank-customer-churn-predictor-fpdytvyqt8n9lmdzbzqgqs.streamlit.app/#12-0)]
+### 🔴 **Live Application:** [[CLICK HERE](https://bank-customer-churn-predictor-fpdytvyqt8n9lmdzbzqgqs.streamlit.app/#12-0)]
 
 ## 🎯 Strategic Overview
 Customer attrition (Churn) is a critical financial drain in the banking sector. This project delivers an **End-to-End Machine Learning Solution** to predict the probability of a customer leaving the bank. 
