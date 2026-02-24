@@ -1,38 +1,39 @@
-# 🛡️ Bank Customer Churn Intelligence
+# 🏛️ Alpha Bank | Customer Churn Intelligence
 
-### 🔴 **Live Demo:** [[Link to App](https://bank-customer-churn-predictor-fpdytvyqt8n9lmdzbzqgqs.streamlit.app)]
+### 🔴 **Live Application:** [PASTE_YOUR_STREAMLIT_LINK_HERE]
 
-## 🎯 Strategic Overview
-Customer attrition (Churn) is one of the most significant financial drains in the banking sector. This project delivers a high-performance **Predictive Analytics System** designed to identify at-risk customers with **82% accuracy** and a **69% recall rate** for churners.
+## 🎯 Project Scope
+Customer retention is a critical KPI for financial institutions. This project delivers an **End-to-End Machine Learning Solution** to predict the probability of a customer leaving the bank (Churn). 
 
-Unlike standard models, this system focuses on **Business Impact**, providing strategic recommendations based on customer behavior, age brackets, and financial standing.
+By leveraging high-performance algorithms, we achieved an **82% overall accuracy** with a focused **69% Recall on churners**, ensuring the bank identifies nearly 70% of at-risk clients before they depart.
 
 ---
 
-## 🚀 Technical Highlights
+## 🚀 Key Technical Features
 
-### 1. Advanced Machine Learning Pipeline
-* **Algorithm:** Utilized **XGBoost** (Extreme Gradient Boosting) for state-of-the-art classification performance.
-* **Data Imbalance Handling:** Implemented **SMOTE** (Synthetic Minority Over-sampling Technique) to balance the dataset, increasing the model's ability to detect actual churners by over 40% compared to baseline models.
-* **Feature Engineering:** Processed categorical variables via One-Hot Encoding and Label Encoding for optimal model ingestion.
+### 1. Data Science Pipeline
+* **Engine:** Built with **XGBoost Classifier**, the industry standard for structured data.
+* **Class Imbalance:** Applied **SMOTE** (Synthetic Minority Over-sampling Technique) to the training set to prevent model bias towards the majority class.
+* **Feature Engineering:** Automated processing of demographic and financial variables, including One-Hot Encoding for geographical data.
 
-### 2. Interactive Decision Support System (Streamlit)
-* **Real-time Prediction:** Instant churn probability scoring based on user input.
-* **Risk Drivers Visualization:** Dynamic bar charts showing the top variables influencing each specific prediction.
-* **Actionable Insights:** Automated strategic suggestions (e.g., retention campaigns for inactive members or high-net-worth individuals).
+### 2. Intelligent Dashboard
+* **Risk Score:** Real-time probability calculation based on customer behavior.
+* **Interpretability:** Visual representation of **Feature Importance** to explain "the why" behind every prediction.
+* **Benchmarking:** Automated comparison between individual client balance and the bank's overall average ($76.5k).
+* **Strategic Insights:** Conditional logic providing specific business recommendations (e.g., Wealth Management vs. Re-activation campaigns).
 
 ---
 
 ## 🛠️ Tech Stack
 * **Language:** Python 3.13
-* **Modeling:** XGBoost, Scikit-Learn
-* **Data Handling:** Pandas, NumPy, Imbalanced-Learn (SMOTE)
+* **Machine Learning:** XGBoost, Scikit-Learn
+* **Data Prep:** Pandas, NumPy, Imbalanced-Learn
+* **Framework:** Streamlit (Web App)
 * **Visualization:** Matplotlib, Seaborn
-* **Deployment:** Streamlit Cloud
 
 ---
 
-## ⚙️ Quick Start (Local Execution)
+## ⚙️ How to Run Locally
 
 ```bash
 git clone [https://github.com/fernandogsloboda/bank-customer-churn-predictor.git](https://github.com/fernandogsloboda/bank-customer-churn-predictor.git) && cd bank-customer-churn-predictor && pip install -r requirements.txt && streamlit run churn_app.py
