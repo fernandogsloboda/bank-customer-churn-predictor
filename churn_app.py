@@ -82,8 +82,8 @@ if run:
         st.markdown(f"<h5 style='color: grey;'>Profile Status</h5>", unsafe_allow_html=True)
         st.markdown(f"<h2 style='color: {risk_color};'>{status}</h2>", unsafe_allow_html=True)
     with m3:
-        st.markdown(f"<h5 style='color: grey;'>Analysis Target</h5>", unsafe_allow_html=True)
-        st.markdown(f"<h2 style='color: #2c3e50;'>Churn (Exit)</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='color: grey;'>Potential Loss</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color: #2c3e50;'>${balance:,.2f}</h2>", unsafe_allow_html=True)
 
     st.markdown("---")
 
