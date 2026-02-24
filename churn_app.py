@@ -9,17 +9,28 @@ st.set_page_config(page_title="Alpha Bank | Churn Intel", layout="wide")
 
 @st.cache_resource
 def load_assets():
-    # Load model and feature list from the exported pickle
+    # Load model and feature list
     pack = joblib.load('churn_model_pack.pkl')
     return pack['model'], pack['features']
 
 model, features = load_assets()
 
-# --- Custom Styling ---
+# --- Custom Styling & Dynamic Colors ---
+def get_metric_style(prob):
+    if prob < 0.3:
+        return "#28a745" # Green (Good)
+    elif prob < 0.6:
+        return "#ffc107" # Yellow (Medium)
+    else:
+        return "#dc3545" # Red (Bad)
+
 st.markdown("""
     <style>
     .main { background-color: #f0f2f6; }
-    .stMetric { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0px 2px 10px rgba(0,0,0,0.05); }
+    /* Style for metric boxes to ensure text visibility */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -43,10 +54,9 @@ with st.sidebar.form("churn_form"):
 
 # --- Main Dashboard ---
 st.title("📊 Customer Churn Intelligence Dashboard")
-st.markdown("Real-time predictive analytics for client retention.")
 
 if run:
-    # Data transformation for XGBoost
+    # Data transformation
     input_df = pd.DataFrame([{
         'CreditScore': credit, 'Gender': 1 if gender == "Male" else 0,
         'Age': age, 'Tenure': tenure, 'Balance': balance,
@@ -57,18 +67,23 @@ if run:
     }])
     input_df = input_df[features]
     
-    # Calculate probability
+    # Prediction
     prob = model.predict_proba(input_df)[0][1]
+    risk_color = get_metric_style(prob)
 
-    # Header Metrics
+    # --- Header Metrics with Forced Colors ---
     m1, m2, m3 = st.columns(3)
+    
     with m1:
-        st.metric("Risk Score", f"{prob:.1%}")
+        st.markdown(f"<h5 style='color: grey;'>Risk Score</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color: {risk_color};'>{prob:.1%}</h2>", unsafe_allow_html=True)
     with m2:
-        status = "CRITICAL" if prob > 0.5 else "STABLE"
-        st.metric("Profile Status", status)
+        status = "CRITICAL" if prob > 0.6 else ("WARNING" if prob > 0.3 else "STABLE")
+        st.markdown(f"<h5 style='color: grey;'>Profile Status</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color: {risk_color};'>{status}</h2>", unsafe_allow_html=True)
     with m3:
-        st.metric("Target Variable", "Exited (Churn)")
+        st.markdown(f"<h5 style='color: grey;'>Analysis Target</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color: #2c3e50;'>Churn (Exit)</h2>", unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -76,20 +91,20 @@ if run:
 
     with col_left:
         st.write("### 📉 Risk Analysis")
-        # Fixed: Casting to float and proper indentation
         st.progress(float(prob))
         
-        if prob > 0.5:
-            st.error(f"⚠️ HIGH CHURN RISK: This customer shows a {prob:.1%} probability of leaving.")
+        if prob > 0.6:
+            st.error(f"⚠️ HIGH CHURN RISK: Probability {prob:.1%}")
+        elif prob > 0.3:
+            st.warning(f"⚡ MODERATE RISK: Probability {prob:.1%}")
         else:
-            st.success(f"✅ RETENTION LIKELY: This customer shows a {prob:.1%} probability of staying.")
+            st.success(f"✅ LOW RISK: Probability {prob:.1%}")
 
-        # Business Insights logic
         st.write("### 💡 Strategic Recommendations")
-        if prob > 0.5:
+        if prob > 0.3:
             if age > 45: st.warning("- Schedule priority financial planning call.")
             if prods == 1: st.warning("- Offer multi-product bundle discounts.")
-            if is_active == "No": st.warning("- Send personalized engagement email.")
+            if active == "No": st.warning("- Send personalized engagement email.")
         else:
             st.info("- Customer is stable. Eligible for premium credit line increases.")
 
@@ -97,25 +112,23 @@ if run:
         tab1, tab2 = st.tabs(["Decision Drivers", "Financial Benchmark"])
         
         with tab1:
-            # Local importance for the specific prediction
+            # Model explainability
             importances = model.feature_importances_
             feat_imp = pd.Series(importances, index=features).sort_values()
             fig, ax = plt.subplots(figsize=(8, 5))
-            feat_imp.tail(5).plot(kind='barh', color='#3498db', ax=ax)
-            ax.set_title("Top 5 Variables Impacting this Prediction")
+            feat_imp.tail(5).plot(kind='barh', color=risk_color, ax=ax)
+            ax.set_title("Top Variables Influencing Prediction")
             st.pyplot(fig)
 
         with tab2:
-            # Benchmark analysis against bank average
+            # Comparison against average
             avg_balance = 76485.89 
             fig2, ax2 = plt.subplots(figsize=(8, 3))
-            colors = ['#95a5a6', '#e74c3c' if prob > 0.5 else '#2ecc71']
-            ax2.barh(["Bank Avg", "Current Client"], [avg_balance, balance], color=colors)
+            ax2.barh(["Bank Avg", "Current Client"], [avg_balance, balance], color=['#95a5a6', risk_color])
             ax2.set_title("Balance Comparison ($)")
             st.pyplot(fig2)
             
             diff = balance - avg_balance
-            if diff > 0:
-                st.write(f"Client is **${diff:,.2f} above** the average bank balance.")
+            st.write(f"Difference from Average: **${diff:+,.2f}**")
 else:
     st.info("👈 Enter customer details in the sidebar and click 'Analyze Risk' to begin.")
