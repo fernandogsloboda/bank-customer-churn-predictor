@@ -13,7 +13,7 @@ def load_assets():
         pack = joblib.load('churn_model_pack.pkl')
         return pack['model'], pack['features']
     except Exception as e:
-        st.error(f"Error loading model: {e}")
+        st.error(f"Error loading model assets: {e}")
         return None, None
 
 model, features = load_assets()
@@ -28,7 +28,6 @@ def get_metric_style(prob):
 st.markdown("""
     <style>
     .main { background-color: #f0f2f6; }
-    [data-testid="stMetricValue"] { font-size: 2rem; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -53,7 +52,7 @@ with st.sidebar.form("churn_form"):
 st.title("📊 Customer Churn Intelligence Dashboard")
 
 if run and model is not None:
-    # Prep data
+    # Prep data for XGBoost
     input_df = pd.DataFrame([{
         'CreditScore': credit, 'Gender': 1 if gender == "Male" else 0,
         'Age': age, 'Tenure': tenure, 'Balance': balance,
@@ -64,24 +63,20 @@ if run and model is not None:
     }])
     input_df = input_df[features]
     
-    # Predict
+    # Predict probability
     prob = float(model.predict_proba(input_df)[0][1])
     risk_color = get_metric_style(prob)
 
-    # --- Metrics ---
-    m1, m2, m3 = st.columns(3)
+    # --- Metrics Layout (Centered) ---
+    m_empty1, m1, m2, m_empty2 = st.columns([1, 2, 2, 1])
+    
     with m1:
-        st.markdown(f"<h5 style='color: grey;'>Risk Score</h5>", unsafe_allow_html=True)
-        st.markdown(f"<h2 style='color: {risk_color};'>{prob:.1%}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='text-align: center; color: grey;'>Risk Score</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align: center; color: {risk_color};'>{prob:.1%}</h2>", unsafe_allow_html=True)
     with m2:
         status = "CRITICAL" if prob > 0.6 else ("WARNING" if prob > 0.3 else "STABLE")
-        st.markdown(f"<h5 style='color: grey;'>Profile Status</h5>", unsafe_allow_html=True)
-        st.markdown(f"<h2 style='color: {risk_color};'>{status}</h2>", unsafe_allow_html=True)
-    with m3:
-        # New "Loyalty Profile" logic
-        tenure_label = "Long-term Client" if tenure > 5 else "Newer Client"
-        st.markdown(f"<h5 style='color: grey;'>Loyalty Profile</h5>", unsafe_allow_html=True)
-        st.markdown(f"<h2 style='color: #2c3e50;'>{tenure_label}</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='text-align: center; color: grey;'>Profile Status</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align: center; color: {risk_color};'>{status}</h2>", unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -97,15 +92,16 @@ if run and model is not None:
 
         st.write("### 💡 Strategic Recommendations")
         if prob > 0.3:
-            if age > 45: st.warning("- Schedule priority financial planning call.")
-            if active == "No": st.warning("- Send personalized engagement campaign.")
-            if prods == 1: st.warning("- Suggest product bundling for higher retention.")
+            if age > 45: st.warning("- Priority: Personal financial advisor assignment.")
+            if active == "No": st.warning("- Campaign: Direct reactivation offer.")
+            if prods == 1: st.warning("- Retention: Product bundle discount.")
         else:
-            st.info("- Standard account maintenance. Cross-sell premium services.")
+            st.info("- Action: Standard maintenance. Offer premium upgrades.")
 
     with col_r:
         tab1, tab2 = st.tabs(["Decision Drivers", "Financial Benchmark"])
         with tab1:
+            # Importance visualization
             importances = model.feature_importances_
             feat_imp = pd.Series(importances, index=features).sort_values()
             fig, ax = plt.subplots(figsize=(8, 5))
@@ -113,10 +109,11 @@ if run and model is not None:
             ax.set_title("Top Variables Influencing Prediction")
             st.pyplot(fig)
         with tab2:
+            # Compare with average balance
             avg_balance = 76485.89 
             fig2, ax2 = plt.subplots(figsize=(8, 3))
             ax2.barh(["Bank Avg", "Current Client"], [avg_balance, balance], color=['#95a5a6', risk_color])
             st.pyplot(fig2)
-            st.write(f"Difference from Average: **${(balance - avg_balance):+,.2f}**")
+            st.write(f"Difference: **${(balance - avg_balance):+,.2f}**")
 else:
     st.info("👈 Enter customer details in the sidebar and click 'Analyze Risk' to begin.")
