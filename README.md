@@ -1,6 +1,6 @@
 # 🛡️ Bank Customer Churn Intelligence
 
-### 🔴 **Live Demo:** [[Link to your Streamlit App](https://bank-customer-churn-predictor-fpdytvyqt8n9lmdzbzqgqs.streamlit.app)]
+### 🔴 **Live Demo:** [[Link to App](https://bank-customer-churn-predictor-fpdytvyqt8n9lmdzbzqgqs.streamlit.app)]
 
 ## 🎯 Strategic Overview
 Customer attrition (Churn) is one of the most significant financial drains in the banking sector. This project delivers a high-performance **Predictive Analytics System** designed to identify at-risk customers with **82% accuracy** and a **69% recall rate** for churners.
