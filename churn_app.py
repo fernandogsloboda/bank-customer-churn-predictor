@@ -69,7 +69,8 @@ if run:
         st.write("### 📊 Diagnostic Dashboard")
         
         # Risk Gauge Simulation
-        st.progress(prob)
+        # Convert float32 to standard float to avoid StreamlitAPIException
+    st.progress(float(prob))
         if prob > 0.5:
             st.error(f"CRITICAL RISK: {prob:.1%} probability of exit.")
         else:
