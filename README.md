@@ -1,33 +1,37 @@
 # 🏛️ Alpha Bank | Customer Churn Intelligence
 
-### 🔴 **Live Application:** [PASTE_YOUR_STREAMLIT_LINK_HERE]
+### 🔴 **Live Application:** [[LINK_DO_APP](https://bank-customer-churn-predictor-fpdytvyqt8n9lmdzbzqgqs.streamlit.app/#12-0)]
 
-## 🎯 Project Scope
-Customer retention is a critical KPI for financial institutions. This project delivers an **End-to-End Machine Learning Solution** to predict the probability of a customer leaving the bank (Churn). 
+## 🎯 Strategic Overview
+Customer attrition (Churn) is a critical financial drain in the banking sector. This project delivers an **End-to-End Machine Learning Solution** to predict the probability of a customer leaving the bank. 
 
-By leveraging high-performance algorithms, we achieved an **82% overall accuracy** with a focused **69% Recall on churners**, ensuring the bank identifies nearly 70% of at-risk clients before they depart.
+By leveraging high-performance algorithms, the system achieved an **82% overall accuracy** with a focused **69% Recall on churners**, identifying nearly 70% of at-risk clients before they depart.
 
 ---
 
-## 🚀 Key Technical Features
+## 🚀 Technical Deep Dive
 
-### 1. Data Science Pipeline
-* **Engine:** Built with **XGBoost Classifier**, the industry standard for structured data.
-* **Class Imbalance:** Applied **SMOTE** (Synthetic Minority Over-sampling Technique) to the training set to prevent model bias towards the majority class.
-* **Feature Engineering:** Automated processing of demographic and financial variables, including One-Hot Encoding for geographical data.
+### 1. The Engine: XGBoost (Extreme Gradient Boosting)
+Instead of a single decision model, I implemented **XGBoost**. It works through an iterative process called *Boosting*, where a sequence of hundreds of decision trees is built. Each new tree is specifically designed to correct the residual errors made by the previous ones, resulting in a highly precise and robust risk score.
 
-### 2. Intelligent Dashboard
-* **Risk Score:** Real-time probability calculation based on customer behavior.
-* **Interpretability:** Visual representation of **Feature Importance** to explain "the why" behind every prediction.
-* **Benchmarking:** Automated comparison between individual client balance and the bank's overall average ($76.5k).
-* **Strategic Insights:** Conditional logic providing specific business recommendations (e.g., Wealth Management vs. Re-activation campaigns).
+
+
+### 2. Solving Data Imbalance: SMOTE
+A common challenge in Churn datasets is the lack of "churn" examples (only 20% of the base). To prevent the model from becoming biased towards active customers, I applied **SMOTE** (Synthetic Minority Over-sampling Technique). This technique creates synthetic data points for the minority class, teaching the model to recognize subtle churn patterns that would otherwise be ignored.
+
+
+
+### 3. Intelligent Dashboard & Interpretability
+* **Real-time Scoring:** Instant churn probability calculation.
+* **Feature Importance:** Visual bar charts explaining the "why" behind each prediction, highlighting variables like Age, Balance, and Product count.
+* **Business Logic:** Automated strategic recommendations based on the predicted risk level and customer profile.
 
 ---
 
 ## 🛠️ Tech Stack
 * **Language:** Python 3.13
 * **Machine Learning:** XGBoost, Scikit-Learn
-* **Data Prep:** Pandas, NumPy, Imbalanced-Learn
+* **Data Prep:** Pandas, NumPy, Imbalanced-Learn (SMOTE)
 * **Framework:** Streamlit (Web App)
 * **Visualization:** Matplotlib, Seaborn
 
@@ -36,4 +40,7 @@ By leveraging high-performance algorithms, we achieved an **82% overall accuracy
 ## ⚙️ How to Run Locally
 
 ```bash
-git clone [https://github.com/fernandogsloboda/bank-customer-churn-predictor.git](https://github.com/fernandogsloboda/bank-customer-churn-predictor.git) && cd bank-customer-churn-predictor && pip install -r requirements.txt && streamlit run churn_app.py
+git clone [https://github.com/fernandogsloboda/bank-customer-churn-predictor.git](https://github.com/fernandogsloboda/bank-customer-churn-predictor.git)
+cd bank-customer-churn-predictor
+pip install -r requirements.txt
+streamlit run churn_app.py
